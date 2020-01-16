@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Asg1 - Paint</title>
+    <script src="js/init.js"></script>
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+<body onload="main()">
+
+<canvas id="canvas" width="500" height="500">
+</canvas>
+
+<h1 id="myButtons">
+    <button id="clearCanvas">Clear Canvas</button><br>
+    <p class="infoText">Drawing Shape:
+        <button id="triangle">Triangle</button> <button id="circle">Circle</button>
+    </p>
+
+    <p class="infoText">Color:
+        Red
+        <input type="range" min="0" max="255" value="50" class="slider" id="redSlide">
+        Green
+        <input type="range" min="0" max="255" value="50" class="slider" id="greenSlide">
+        Blue
+        <input type="range" min="0" max="255" value="50" class="slider" id="blueSlide">
+    </p>
+    <p>
+    Size<input type="range" min="1" max="12" value="3" class="slider" id="sizeSlide">
+    </p>
+</h1>
+
+<script src="js/main.js"></script>
+<script src="js/shapes.js"></script>
+<script src="https://twgljs.org/dist/3.x/twgl.min.js"></script>
+</body>
+</html>
