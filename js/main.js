@@ -2,9 +2,8 @@
 var VSHADER_SOURCE = `
   attribute vec4 a_Position;
   uniform vec2 u_Offset;
-  uniform mat4 u_xformMatrix;
   void main() {
-    gl_Position = ((a_Position + vec4(u_Offset, 0, 0))*u_xformMatrix);
+    gl_Position = a_Position + vec4(u_Offset, 0, 0);
   }`;
 
 // Fragment shader program
@@ -23,8 +22,11 @@ var fColorLocation;
 var color = [];
 let size;
 var xformMatrix;
-
+var vertices;
 var xForm;
+var positionBuffer;
+var typ = 'triangle';
+var triProgram;
 
 
 function main() {
@@ -43,11 +45,13 @@ function main() {
         console.log('Failed to intialize shaders.');
         return;
     }
+
     offsetLoc = gl.getUniformLocation(gl.program, "u_Offset");
     fColorLocation = gl.getUniformLocation(gl.program, "mycolor");
 
     size = document.getElementById('sizeSlide').value;
-    initTriangleVertexBuffers(gl,size);
+    initCircleBuffers(360);
+    initTriangleVertexBuffers();
     // // // Register function (event handler) to be called on a mouse press
 
     // Specify the color for clearing <canvas>
@@ -60,13 +64,6 @@ function main() {
              document.getElementById('greenSlide').value/255,
              document.getElementById('blueSlide').value/255
             ];
-    xForm = gl.getUniformLocation(gl.program, 'u_xformMatrix');
-     xformMatrix = new Float32Array([
-        size,   0.0,  0.0,  0.0,
-        0.0,   size,  0.0,  0.0,
-        0.0,   0.0,   size,  0.0,
-        0.0,   0.0,   0.0,  1.0
-    ]);
 
 }
 
@@ -80,17 +77,17 @@ function initShaders(gl, vsrc, fsrc) {
 }
 
 //Make the BO for making triangle
-function initTriangleVertexBuffers(gl,size){
+function initTriangleVertexBuffers(){
+    var positionBuffer = gl.createBuffer();
 
-    var vertices = new Float32Array([
-        0.0, 0.1,
-        -0.1, -0.1,
-        0.1, -0.1,
+     vertices = new Float32Array([
+        0.0, 0.1*size,
+        -0.1*size, -0.1*size,
+        0.1*size, -0.1*size,
     ]);
     var n = 3;
 
     //Create a buffer Object
-    var positionBuffer = gl.createBuffer();
     if(!positionBuffer){
         console.log('Failed to create the buffer object');
         return -1;
@@ -113,6 +110,43 @@ function initTriangleVertexBuffers(gl,size){
 
     //Enable the assignment to a_Position variable
     gl.enableVertexAttribArray(a_Position);
+    buffers.triangle = n;
 
     return n;
+
 }
+
+function initCircleBuffers(deg) {
+    var vertexBuffer = gl.createBuffer();
+        vertices = [];
+        let vertcount = 2;
+
+        for (let i = 0.0; i<=deg; i++){
+         let j = i * Math.PI/180;
+         var vert1 = [
+             Math.sin(j) * size/20,
+             Math.cos(j) * size/20,
+         ];
+
+         var vert2 = [
+             0,
+             0,
+         ];
+         vertices = vertices.concat(vert1);
+         vertices = vertices.concat(vert2);
+        }
+        var n = vertices.length/vertcount;
+        gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
+
+
+        var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+         gl.vertexAttribPointer(a_Position, vertcount, gl.FLOAT, false, 0, 0);
+
+        //Enable the assignment to a_Position variable
+        gl.enableVertexAttribArray(a_Position);
+        buffers.circle = n;
+        return n;
+}
+
+
