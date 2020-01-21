@@ -21,12 +21,9 @@ let canvas;
 var fColorLocation;
 var color = [];
 let size;
-var xformMatrix;
 var vertices;
-var xForm;
-var positionBuffer;
 var typ = 'triangle';
-var triProgram;
+let cVertexBuffer;
 
 
 function main() {
@@ -50,8 +47,9 @@ function main() {
     fColorLocation = gl.getUniformLocation(gl.program, "mycolor");
 
     size = document.getElementById('sizeSlide').value;
-    initCircleBuffers(360);
     initTriangleVertexBuffers();
+    initCircleBuffers(360);
+
     // // // Register function (event handler) to be called on a mouse press
 
     // Specify the color for clearing <canvas>
@@ -99,7 +97,7 @@ function initTriangleVertexBuffers(){
     gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
     //Assign the buffer object to a_Position variable
-    var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+    let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
     if (a_Position < 0) {
         console.log('Failed to get the storage location  of a_Position');
         return -1;
@@ -117,7 +115,7 @@ function initTriangleVertexBuffers(){
 }
 
 function initCircleBuffers(deg) {
-    var vertexBuffer = gl.createBuffer();
+    let vertexBuffer = gl.createBuffer();
         vertices = [];
         let vertcount = 2;
 
@@ -135,12 +133,12 @@ function initCircleBuffers(deg) {
          vertices = vertices.concat(vert1);
          vertices = vertices.concat(vert2);
         }
-        var n = vertices.length/vertcount;
+        let n = vertices.length/vertcount;
         gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
 
 
-        var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+        let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
          gl.vertexAttribPointer(a_Position, vertcount, gl.FLOAT, false, 0, 0);
 
         //Enable the assignment to a_Position variable

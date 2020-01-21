@@ -9,43 +9,45 @@ function click(ev) {
 
     x = ((x - rect.left) - canvas.width / 2) / (canvas.width / 2);
     y = (canvas.height / 2 - (y - rect.top)) / (canvas.height / 2);
-
-
     let shape = {"x": x, "y": y, "color": color, "type": typ};
     // Store the coordinates to shapes array
     shapes.push(shape);
-    console.log(x, y);
-    draw();
+    // console.log(x, y);
+    draw(shapes);
 }
 
 function drawTriangle(x, y,color) {
+    console.log("in drawTriangle");
     // initTriangleVertexBuffers(gl,size);
     gl.uniform2f(offsetLoc, x, y);
     // gl.uniformMatrix4fv(xForm, false, xformMatrix);
     gl.uniform3fv(fColorLocation, color);
     gl.drawArrays(gl.TRIANGLES, 0, buffers.triangle);
+    // gl.drawArrays(gl.TRIANGLE_STRIP, 0, buffers.circle);
 }
 
 function drawCircle(x,y,color){
+    console.log("in drawcircle");
     gl.uniform2f(offsetLoc, x, y);
     // gl.uniformMatrix4fv(xForm, false, xformMatrix);
     gl.uniform3fv(fColorLocation, color);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, buffers.circle);
+    // gl.drawArrays(gl.TRIANGLES, 0, buffers.triangle);
 
 }
 
-function draw(){
-    var len = shapes.length;
+function draw(shapeArr){
+    var len = shapeArr.length;
     for (var i = 0; i < len; i++) {
-        // Draw
-        // gl.uniform2f(offsetLoc, shapes[i].x, shapes[i].y);
-        // // gl.uniformMatrix4fv(xForm, false, xformMatrix);
-        // gl.uniform3fv(fColorLocation, shapes[i].color);
-        // gl.drawArrays(gl.TRIANGLES, 0, 3);
-        if (shapes[i].type === 'triangle') {
-            drawTriangle(shapes[i].x, shapes[i].y, shapes[i].color);
-        } else {
-            drawCircle(shapes[i].x, shapes[i].y, shapes[i].color)
+        console.log(shapeArr[i]);
+        if (shapeArr[i].type === 'triangle') {
+            console.log("Drawing a triangle");
+            // initCircleBuffers(360);
+            drawTriangle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color);
+        } else if (shapeArr[i].type==='circle') {
+            console.log("drawing a circle");
+            // initTriangleVertexBuffers();
+            drawCircle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color)
         }
     }
 }
@@ -89,21 +91,22 @@ document.getElementById('blueSlide').onchange = function () {
 };
 document.getElementById('sizeSlide').onchange = function () {
     size = document.getElementById('sizeSlide').value;
-    initCircleBuffers(360);
-
+    if (typ === 'triangle'){
+        initTriangleVertexBuffers()
+    } else {
+        initCircleBuffers(360);
+    }
+    draw(shapes);
 };
 
 document.getElementById('circle').onclick = function () {
-    initCircleBuffers(360);
-    
-    // typ = 'circle';
-    draw();
+    typ = 'circle';
+    draw(shapes);
 };
 
 document.getElementById('triangle').onclick = function () {
-    initTriangleVertexBuffers();
-    // typ = 'triangle';
-    draw()
+    typ = 'triangle';
+    draw(shapes)
 };
 
 
