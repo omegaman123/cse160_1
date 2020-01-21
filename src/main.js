@@ -124,7 +124,6 @@ function initCircleBuffers(deg, seg) {
 
         let seg1 = nextDivisor(parseInt(seg));
 
-        console.log("seg1 seg " + seg1);
         for (let i = 0.0; i<=deg; i+=seg1){
          let j = i * Math.PI/180;
          var vert1 = [

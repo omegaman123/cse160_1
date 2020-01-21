@@ -45,7 +45,6 @@ function drawTriangle(x, y,color,size) {
 }
 
 function drawCircle(x,y,color,size,seg){
-    console.log("draw circle seg " + seg);
     initCircleBuffers(360, seg);
     gl.bindBuffer(gl.ARRAY_BUFFER,cVertexBuffer);
     let nVert = [];
