@@ -9,18 +9,22 @@ function click(ev) {
 
     x = ((x - rect.left) - canvas.width / 2) / (canvas.width / 2);
     y = (canvas.height / 2 - (y - rect.top)) / (canvas.height / 2);
-    let shape = {"x": x, "y": y, "color": color, "type": typ};
+    let shape = {"x": x, "y": y, "color": color, "type": typ, "size":size};
     // Store the coordinates to shapes array
     shapes.push(shape);
     // console.log(x, y);
     draw(shapes);
 }
 
-function drawTriangle(x, y,color) {
+function drawTriangle(x, y,color,size) {
     // initTriangleVertexBuffers(gl,size);
     gl.bindBuffer(gl.ARRAY_BUFFER, tVertexBuffer);
     //Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, tVertices, gl.STATIC_DRAW);
+    let nVert = [];
+    for (let i = 0; i < tVertices.length; i++){
+        nVert.push(tVertices[i]*size);
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(nVert), gl.STATIC_DRAW);
 
     let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
     if (a_Position < 0) {
@@ -40,9 +44,14 @@ function drawTriangle(x, y,color) {
     // gl.drawArrays(gl.TRIANGLE_STRIP, 0, buffers.circle);
 }
 
-function drawCircle(x,y,color){
+function drawCircle(x,y,color,size){
     gl.bindBuffer(gl.ARRAY_BUFFER,cVertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cVertices),gl.STATIC_DRAW);
+    let nVert = [];
+    for (let i = 0; i < cVertices.length; i++){
+        nVert.push(cVertices[i]*size);
+    }
+
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(nVert),gl.STATIC_DRAW);
     let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
     gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
 
@@ -61,10 +70,10 @@ function draw(shapeArr){
     for (var i = 0; i < len; i++) {
         if (shapeArr[i].type === 'triangle') {
             // initCircleBuffers(360);
-            drawTriangle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color);
+            drawTriangle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color, shapeArr[i].size);
         } else if (shapeArr[i].type==='circle') {
             // initTriangleVertexBuffers();
-            drawCircle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color)
+            drawCircle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color,shapeArr[i].size)
         }
     }
 }
@@ -108,12 +117,12 @@ document.getElementById('blueSlide').onchange = function () {
 };
 document.getElementById('sizeSlide').onchange = function () {
     size = document.getElementById('sizeSlide').value;
-    if (typ === 'triangle'){
-        initTriangleVertexBuffers()
-    } else {
-        initCircleBuffers(360);
-    }
     draw(shapes);
+};
+
+document.getElementById('segSlide').onchange = function(){
+
+
 };
 
 document.getElementById('circle').onclick = function () {

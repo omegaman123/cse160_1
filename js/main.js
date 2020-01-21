@@ -27,6 +27,7 @@ let cVertexBuffer;
 let tVertexBuffer;
 let cVertices;
 let tVertices;
+let segm;
 function main() {
     // Retrieve <canvas> element
      canvas = document.getElementById('canvas');
@@ -48,7 +49,8 @@ function main() {
     fColorLocation = gl.getUniformLocation(gl.program, "mycolor");
 
     size = document.getElementById('sizeSlide').value;
-    initCircleBuffers(360);
+    segm = document.getElementById('segSlide').value;
+    initCircleBuffers(360,segm);
     initTriangleVertexBuffers();
 
     // // // Register function (event handler) to be called on a mouse press
@@ -115,12 +117,12 @@ function initTriangleVertexBuffers(){
 
 }
 
-function initCircleBuffers(deg) {
+function initCircleBuffers(deg,seg) {
      cVertexBuffer = gl.createBuffer();
         cVertices = [];
         let vertcount = 2;
 
-        for (let i = 0.0; i<=deg; i++){
+        for (let i = 0.0; i<=deg; i+=30){
          let j = i * Math.PI/180;
          var vert1 = [
              Math.sin(j) * size/20,
