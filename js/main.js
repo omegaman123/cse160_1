@@ -117,16 +117,19 @@ function initTriangleVertexBuffers(){
 
 }
 
-function initCircleBuffers(deg,seg) {
+function initCircleBuffers(deg, seg) {
      cVertexBuffer = gl.createBuffer();
         cVertices = [];
         let vertcount = 2;
 
-        for (let i = 0.0; i<=deg; i+=30){
+        let seg1 = nextDivisor(parseInt(seg));
+
+        console.log("seg1 seg " + seg1);
+        for (let i = 0.0; i<=deg; i+=seg1){
          let j = i * Math.PI/180;
          var vert1 = [
-             Math.sin(j) * size/20,
-             Math.cos(j) * size/20,
+             Math.sin(j) ,
+             Math.cos(j) ,
          ];
 
          var vert2 = [
@@ -148,6 +151,18 @@ function initCircleBuffers(deg,seg) {
         gl.enableVertexAttribArray(a_Position);
         buffers.circle = n;
         return n;
+}
+
+function nextDivisor(num) {
+    if (num >= 120) {
+        return 120;
+    }
+    while (true) {
+        if (360 % num === 0) {
+            return num;
+        }
+        num++;
+    }
 }
 
 

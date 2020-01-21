@@ -9,7 +9,7 @@ function click(ev) {
 
     x = ((x - rect.left) - canvas.width / 2) / (canvas.width / 2);
     y = (canvas.height / 2 - (y - rect.top)) / (canvas.height / 2);
-    let shape = {"x": x, "y": y, "color": color, "type": typ, "size":size};
+    let shape = {"x": x, "y": y, "color": color, "type": typ, "size":size, "segm":segm};
     // Store the coordinates to shapes array
     shapes.push(shape);
     // console.log(x, y);
@@ -44,11 +44,13 @@ function drawTriangle(x, y,color,size) {
     // gl.drawArrays(gl.TRIANGLE_STRIP, 0, buffers.circle);
 }
 
-function drawCircle(x,y,color,size){
+function drawCircle(x,y,color,size,seg){
+    console.log("draw circle seg " + seg);
+    initCircleBuffers(360, seg);
     gl.bindBuffer(gl.ARRAY_BUFFER,cVertexBuffer);
     let nVert = [];
     for (let i = 0; i < cVertices.length; i++){
-        nVert.push(cVertices[i]*size);
+        nVert.push(cVertices[i]*size/10);
     }
 
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(nVert),gl.STATIC_DRAW);
@@ -73,7 +75,7 @@ function draw(shapeArr){
             drawTriangle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color, shapeArr[i].size);
         } else if (shapeArr[i].type==='circle') {
             // initTriangleVertexBuffers();
-            drawCircle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color,shapeArr[i].size)
+            drawCircle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color,shapeArr[i].size,shapeArr[i].segm)
         }
     }
 }
@@ -121,7 +123,7 @@ document.getElementById('sizeSlide').onchange = function () {
 };
 
 document.getElementById('segSlide').onchange = function(){
-
+segm = document.getElementById('segSlide').value;
 
 };
 
