@@ -17,8 +17,22 @@ function click(ev) {
 }
 
 function drawTriangle(x, y,color) {
-    console.log("in drawTriangle");
     // initTriangleVertexBuffers(gl,size);
+    gl.bindBuffer(gl.ARRAY_BUFFER, tVertexBuffer);
+    //Write date into the buffer object
+    gl.bufferData(gl.ARRAY_BUFFER, tVertices, gl.STATIC_DRAW);
+
+    let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+    if (a_Position < 0) {
+        console.log('Failed to get the storage location  of a_Position');
+        return -1;
+    }
+
+    //Connect the assignment to a_Position variable
+    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+
+    //Enable the assignment to a_Position variable
+    gl.enableVertexAttribArray(a_Position);
     gl.uniform2f(offsetLoc, x, y);
     // gl.uniformMatrix4fv(xForm, false, xformMatrix);
     gl.uniform3fv(fColorLocation, color);
@@ -27,7 +41,13 @@ function drawTriangle(x, y,color) {
 }
 
 function drawCircle(x,y,color){
-    console.log("in drawcircle");
+    gl.bindBuffer(gl.ARRAY_BUFFER,cVertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cVertices),gl.STATIC_DRAW);
+    let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+
+    //Enable the assignment to a_Position variable
+    gl.enableVertexAttribArray(a_Position);
     gl.uniform2f(offsetLoc, x, y);
     // gl.uniformMatrix4fv(xForm, false, xformMatrix);
     gl.uniform3fv(fColorLocation, color);
@@ -39,13 +59,10 @@ function drawCircle(x,y,color){
 function draw(shapeArr){
     var len = shapeArr.length;
     for (var i = 0; i < len; i++) {
-        console.log(shapeArr[i]);
         if (shapeArr[i].type === 'triangle') {
-            console.log("Drawing a triangle");
             // initCircleBuffers(360);
             drawTriangle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color);
         } else if (shapeArr[i].type==='circle') {
-            console.log("drawing a circle");
             // initTriangleVertexBuffers();
             drawCircle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].color)
         }

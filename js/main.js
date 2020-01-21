@@ -24,8 +24,9 @@ let size;
 var vertices;
 var typ = 'triangle';
 let cVertexBuffer;
-
-
+let tVertexBuffer;
+let cVertices;
+let tVertices;
 function main() {
     // Retrieve <canvas> element
      canvas = document.getElementById('canvas');
@@ -47,8 +48,8 @@ function main() {
     fColorLocation = gl.getUniformLocation(gl.program, "mycolor");
 
     size = document.getElementById('sizeSlide').value;
-    initTriangleVertexBuffers();
     initCircleBuffers(360);
+    initTriangleVertexBuffers();
 
     // // // Register function (event handler) to be called on a mouse press
 
@@ -76,9 +77,9 @@ function initShaders(gl, vsrc, fsrc) {
 
 //Make the BO for making triangle
 function initTriangleVertexBuffers(){
-    var positionBuffer = gl.createBuffer();
+   tVertexBuffer = gl.createBuffer();
 
-     vertices = new Float32Array([
+     tVertices = new Float32Array([
         0.0, 0.1*size,
         -0.1*size, -0.1*size,
         0.1*size, -0.1*size,
@@ -86,15 +87,15 @@ function initTriangleVertexBuffers(){
     var n = 3;
 
     //Create a buffer Object
-    if(!positionBuffer){
+    if(!tVertexBuffer){
         console.log('Failed to create the buffer object');
         return -1;
     }
 
     //Bind the buffer object to target
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, tVertexBuffer);
     //Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, tVertices, gl.STATIC_DRAW);
 
     //Assign the buffer object to a_Position variable
     let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
@@ -115,8 +116,8 @@ function initTriangleVertexBuffers(){
 }
 
 function initCircleBuffers(deg) {
-    let vertexBuffer = gl.createBuffer();
-        vertices = [];
+     cVertexBuffer = gl.createBuffer();
+        cVertices = [];
         let vertcount = 2;
 
         for (let i = 0.0; i<=deg; i++){
@@ -130,12 +131,12 @@ function initCircleBuffers(deg) {
              0,
              0,
          ];
-         vertices = vertices.concat(vert1);
-         vertices = vertices.concat(vert2);
+            cVertices = cVertices.concat(vert1);
+            cVertices = cVertices.concat(vert2);
         }
-        let n = vertices.length/vertcount;
-        gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
+        let n = cVertices.length/vertcount;
+        gl.bindBuffer(gl.ARRAY_BUFFER,cVertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cVertices),gl.STATIC_DRAW);
 
 
         let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
